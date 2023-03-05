@@ -14,13 +14,18 @@ public class EnemyController : MonoBehaviour
     float speed;
     int stability;
     float shakeSpeed; 
-    float shakeAmount = 0.02f; 
-
-
-
+    float shakeAmount; 
+    public float MaxShakeSpeed = 50.0f; 
+    public float MaxShakeAmount = 0.05f; 
+    [SerializeField]
+    public Color fullStability;
+    public Color freeStability; 
+    SpriteRenderer spriteBorder;
 
     // Start is called before the first frame update
     void Start(){
+        spriteBorder = enemyCollider.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+
         speed = Random.Range(0.2f, 1.0f);
         stability = Random.Range(1, 100);
         
@@ -33,7 +38,7 @@ public class EnemyController : MonoBehaviour
         else  // 1 - 25
             points = Random.Range(6, 7);
 
-        Player = GameObject.FindWithTag("Player").transform;        
+        Player = GameObject.FindWithTag("Player").transform;    
     }
 
 
@@ -41,17 +46,7 @@ public class EnemyController : MonoBehaviour
     void Update(){
         FollowPlayer();
         CheckStatus();
-
-        float scale = (100.0f - (float)stability) / 100.0f;
-        enemyCollider.transform.GetChild(0).gameObject.transform.localScale = new Vector3(scale, scale, 0);
-
-        SpriteRenderer sprite = enemyCollider.GetComponent<SpriteRenderer>();
-        sprite.color = Color.white;
-        shakeSpeed = (100.0f - (float)stability) * 40.0f / 100.0f;
-        sprite.transform.position = new Vector3(transform.position.x + Mathf.Sin(Time.time * shakeSpeed) * shakeAmount, transform.position.y, 0);
-
-        pointsTextbox.GetComponent<TMP_Text>().text = (points).ToString();
-        stabilityTextbox.GetComponent<TMP_Text>().text = (stability).ToString();
+        Stylize();
     }
 
     void CheckStatus(){
@@ -81,6 +76,17 @@ public class EnemyController : MonoBehaviour
         
         Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         enemyCollider.transform.rotation = Quaternion.Slerp(enemyCollider.transform.rotation, rotation, speedRot * Time.deltaTime);
-        
+    }
+
+    void Stylize(){
+        //show status
+        pointsTextbox.GetComponent<TMP_Text>().text = (points).ToString();
+        stabilityTextbox.GetComponent<TMP_Text>().text = (stability).ToString() + "%";
+        //calc color
+        spriteBorder.color =  Color.Lerp(freeStability, fullStability, stability/100.0f);
+        //calc shake
+        shakeSpeed = (100.0f - (float)stability) * MaxShakeSpeed / 100.0f;
+        shakeAmount = (100.0f - (float)stability) * MaxShakeAmount / 100.0f;
+        spriteBorder.transform.position = new Vector3(transform.position.x + Mathf.Sin(Time.time * shakeSpeed) * shakeAmount, transform.position.y + Mathf.Sin(Time.time * shakeSpeed) * shakeAmount, 0);
     }
 }
