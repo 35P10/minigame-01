@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -10,7 +9,7 @@ public class GameController : MonoBehaviour
     Vector3 screenDimensions;
     int[] negativePositive = {-1,1};
 
-    int numberOfEnemies = 3;
+    int numberOfEnemies = 2;
     // Start is called before the first frame update
     void Start(){
         screenDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height,0));
@@ -19,15 +18,14 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update(){
         if(!player.GetComponent<PlayerController>().CheckStatus()){
-            Time.timeScale = 0f;
-            Debug.Log("Game Over");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            Time.timeScale = 1f;
+            GameStatus.UpdateScore();
+            GameStatus.isGameOver = true;
+            Destroy(gameObject);
         }
-        
         if(GameObject.FindGameObjectsWithTag("Enemy").Length == 0){
             for(int i = 0 ; i < numberOfEnemies ; i++)
                 StartCoroutine(GenerateEnemyCoroutine());
+            numberOfEnemies++;
         }
 
     }

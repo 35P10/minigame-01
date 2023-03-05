@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start(){
-
+        points = 1;
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void Shot(){
-        if(points > 0 && Input.GetKeyDown(KeyCode.Space)){
+        if(GameStatus.focus == 0 && points > 0 && Input.GetKeyDown(KeyCode.Space)){
             Instantiate(bullet, firePoint.position, PlayerCollider.transform.rotation);
             points--;
         }
@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour
             else {
                 points += enemyScript.GetPoints();
                 Destroy(enemy);
+                GameStatus.actualGameEnemiesKilled++;
             }
             
         }

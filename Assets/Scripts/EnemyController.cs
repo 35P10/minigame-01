@@ -17,9 +17,10 @@ public class EnemyController : MonoBehaviour
     float shakeAmount; 
     public float MaxShakeSpeed = 50.0f; 
     public float MaxShakeAmount = 0.05f; 
-    [SerializeField]
     public Color fullStability;
     public Color freeStability; 
+    public int damageRangeMin = 5;
+    public int damageRangeMax = 10;
     SpriteRenderer spriteBorder;
 
     // Start is called before the first frame update
@@ -50,13 +51,15 @@ public class EnemyController : MonoBehaviour
     }
 
     void CheckStatus(){
-        if(stability < 1)
+        if(stability < 1){
             Destroy(gameObject);
+            GameStatus.actualGameEnemiesKilled++;
+        }
     }
 
     public void TakeCharge(int addpoints){
         points += addpoints;
-        stability -= Random.Range(1, 10);
+        stability -= Random.Range(damageRangeMin, damageRangeMax);
     }
 
     public int GetPoints(){
