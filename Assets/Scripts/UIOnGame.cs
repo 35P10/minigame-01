@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class UIOnGame : MonoBehaviour
 {
     [Header("On Game")]
+    public GameObject OnGamePanel;
     public TMP_Text onGameScoreTextbox;
     [Header("Game Over")]
     public GameObject gameOverScorePanel; 
@@ -20,6 +21,7 @@ public class UIOnGame : MonoBehaviour
     void Start(){
         gameOverScorePanel.SetActive(false);
         pauseScorePanel.SetActive(false);
+        OnGamePanel.SetActive(true);
         GameStatus.focus = 0;
     }
 
@@ -48,6 +50,7 @@ public class UIOnGame : MonoBehaviour
         Time.timeScale = 0f;
         gameOverScoreTextbox.text = (GameStatus.actualGameEnemiesKilled).ToString();
         gameOverBestScoreTextbox.text = (GameStatus.maxEnemiesKilled).ToString();
+        OnGamePanel.SetActive(false);
         gameOverScorePanel.SetActive(true);
     }
 
@@ -55,6 +58,7 @@ public class UIOnGame : MonoBehaviour
         GameStatus.focus = 1;
         Time.timeScale = 0f;
         pauseScoreTextbox.text = (GameStatus.actualGameEnemiesKilled).ToString();
+        OnGamePanel.SetActive(false);
         pauseScorePanel.SetActive(true);
     }
 
@@ -62,6 +66,7 @@ public class UIOnGame : MonoBehaviour
         GameStatus.focus = 0;
         Time.timeScale = 1f;
         pauseScorePanel.SetActive(false);
+        OnGamePanel.SetActive(true);
     }
 
     public void RestartGame(){
